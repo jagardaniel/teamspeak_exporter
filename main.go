@@ -26,6 +26,15 @@ func main() {
 	reg.MustRegister(collector)
 
 	http.Handle("/metrics", promhttp.HandlerFor(reg, promhttp.HandlerOpts{}))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		_, _ = w.Write([]byte(`<html>
+             <head><title>TeamSpeak	Exporter</title></head>
+             <body>
+             <h1>TeamSpeak Exporter</h1>
+             <p><a href="/metrics">Metrics</a></p>
+             </body>
+             </html>`))
+	})
 
 	log.Printf("listening on %s", config.Listen)
 

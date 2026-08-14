@@ -1,4 +1,4 @@
-module github.com/jagardaniel/teamspeak-exporter
+module github.com/jagardaniel/teamspeak_exporter
 
 go 1.26.5
 
