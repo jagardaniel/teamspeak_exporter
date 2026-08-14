@@ -21,6 +21,11 @@ func main() {
 
 	client := NewClient(config.URL, config.APIKey)
 
+	// Verify that we can reach the WebQuery API and that the api-key is valid and has the correct scope
+	if err := client.Ping(); err != nil {
+		log.Fatalf("unable to reach webquery api: %v", err)
+	}
+
 	reg := prometheus.NewRegistry()
 	collector := NewCollector(client)
 	reg.MustRegister(collector)
