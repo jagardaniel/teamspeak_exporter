@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -47,7 +48,7 @@ type VirtualServerInfoResponse struct {
 	TotalPacketLossKeepalive       float64 `json:"virtualserver_total_packetloss_keepalive,string"`
 	TotalPacketLossControl         float64 `json:"virtualserver_total_packetloss_control,string"`
 	TotalPacketLossTotal           float64 `json:"virtualserver_total_packetloss_total,string"`
-	TotalPing                      float32 `json:"virtualserver_total_ping,string"`
+	TotalPing                      float64 `json:"virtualserver_total_ping,string"`
 	BytesReceivedControl           uint64  `json:"connection_bytes_received_control,string"`
 	BytesReceivedKeepalive         uint64  `json:"connection_bytes_received_keepalive,string"`
 	BytesReceivedSpeech            uint64  `json:"connection_bytes_received_speech,string"`
@@ -68,9 +69,11 @@ type VirtualServerInfoResponse struct {
 	PacketsSentTotal               uint64  `json:"connection_packets_sent_total,string"`
 }
 
-func NewClient(baseURL, apiKey string) Client {
-	return Client{
-		baseURL: baseURL,
+func NewClient(baseURL, apiKey string) *Client {
+	cleanedURL := strings.TrimRight(baseURL, "/")
+
+	return &Client{
+		baseURL: cleanedURL,
 		apiKey:  apiKey,
 		httpClient: &http.Client{
 			Timeout: 5 * time.Second,
@@ -78,7 +81,6 @@ func NewClient(baseURL, apiKey string) Client {
 	}
 }
 
-// Call this like this: return get[Version](c, "/version")
 func get[T any](c *Client, endpoint string) (T, error) {
 	var zero T
 
@@ -143,7 +145,7 @@ func (c *Client) VirtualServerInfo(id int) (VirtualServerInfoResponse, error) {
 	}
 
 	if len(info) != 1 {
-		return VirtualServerInfoResponse{}, fmt.Errorf("expected exactly 1 version entry, got %d", len(info))
+		return VirtualServerInfoResponse{}, fmt.Errorf("expected exactly 1 serverinfo entry, got %d", len(info))
 	}
 
 	return info[0], nil

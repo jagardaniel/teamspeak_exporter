@@ -2,9 +2,18 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/alecthomas/kong"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
+
+type Config struct {
+	Listen string `env:"TS_EXPORTER_LISTEN" help:"Address on which to expose metrics and web interface." default:":9800"`
+	APIKey string `env:"TS_EXPORTER_API_KEY" help:"API key for WebQuery authentication." required:""`
+	URL    string `env:"TS_EXPORTER_URL" help:"URL for TeamSpeak WebQuery endpoint." default:"http://127.0.0.1:10080"`
+}
 
 func main() {
 	config := &Config{}
@@ -12,25 +21,15 @@ func main() {
 
 	client := NewClient(config.URL, config.APIKey)
 
-	version, err := client.Version()
-	if err != nil {
-		log.Println(err)
+	reg := prometheus.NewRegistry()
+	collector := NewCollector(client)
+	reg.MustRegister(collector)
+
+	http.Handle("/metrics", promhttp.HandlerFor(reg, promhttp.HandlerOpts{}))
+
+	log.Printf("listening on %s", config.Listen)
+
+	if err := http.ListenAndServe(config.Listen, nil); err != nil {
+		log.Fatalf("HTTP server error: %v", err)
 	}
-
-	servers, err := client.VirtualServerList()
-	if err != nil {
-		log.Println(err)
-	}
-
-	for _, server := range servers {
-		info, err := client.VirtualServerInfo(server.ID)
-		if err != nil {
-			log.Println(err)
-		}
-
-		log.Println(info)
-	}
-
-	log.Println(version)
-	log.Println(servers)
 }
