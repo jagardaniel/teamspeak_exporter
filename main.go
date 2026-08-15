@@ -23,7 +23,7 @@ func main() {
 
 	// Verify that we can reach the WebQuery API and that the api-key is valid and has the correct scope
 	if err := client.Ping(); err != nil {
-		log.Fatalf("unable to reach webquery api: %v", err)
+		log.Fatalf("failed to start: %v", err)
 	}
 
 	reg := prometheus.NewRegistry()

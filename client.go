@@ -99,20 +99,19 @@ func get[T any](c *Client, endpoint string) (T, error) {
 	}
 	defer res.Body.Close()
 
+	var env responseWrapper[T]
+	decodeErr := json.NewDecoder(res.Body).Decode(&env)
+
+	if decodeErr == nil && env.Status.Code != 0 {
+		return zero, fmt.Errorf("webquery api error %d: %s", env.Status.Code, env.Status.Message)
+	}
+
 	if res.StatusCode != http.StatusOK {
-		if res.StatusCode == http.StatusUnauthorized {
-			return zero, fmt.Errorf("authentication failed (HTTP 401): invalid API key (or missing required 'manage' scope)")
-		}
 		return zero, fmt.Errorf("invalid HTTP status code %d from %s", res.StatusCode, endpoint)
 	}
 
-	var env responseWrapper[T]
-	if err := json.NewDecoder(res.Body).Decode(&env); err != nil {
-		return zero, fmt.Errorf("failed to decode JSON response from %s: %w", endpoint, err)
-	}
-
-	if env.Status.Code != 0 {
-		return zero, fmt.Errorf("webquery api error %d: %s", env.Status.Code, env.Status.Message)
+	if decodeErr != nil {
+		return zero, fmt.Errorf("failed to decode JSON response from %s: %w", endpoint, decodeErr)
 	}
 
 	return env.Body, nil
@@ -122,7 +121,7 @@ func (c *Client) Ping() error {
 	// Call an endpoint that requires the api-key to have scope=manage
 	_, err := get[any](c, "serverlist")
 	if err != nil {
-		return fmt.Errorf("ping failed: %w", err)
+		return fmt.Errorf("connection check failed: %w", err)
 	}
 	return nil
 }
