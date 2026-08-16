@@ -135,7 +135,7 @@ func TestBadJSONOnServerInfo(t *testing.T) {
 	responses := map[string]string{
 		"/version":      mockVersionJSON,
 		"/serverlist":   mockServerListMultiJSON,
-		"/1/serverinfo": `{corrupt json payload}`,
+		"/1/serverinfo": mockMalformedJSON,
 		"/2/serverinfo": mockServer2InfoJSON,
 	}
 
