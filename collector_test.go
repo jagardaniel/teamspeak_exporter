@@ -20,6 +20,9 @@ func TestSingleOnlineServer(t *testing.T) {
 	collector := NewCollector(client)
 
 	expectedOutput := `
+		# HELP teamspeak_up Was the last scrape of the TeamSpeak ServerQuery API successful (1 = yes, 0 = no)
+        # TYPE teamspeak_up gauge
+        teamspeak_up 1
 		# HELP teamspeak_version_info Servers version information including platform and build number
 		# TYPE teamspeak_version_info gauge
 		teamspeak_version_info{build="1779874471",platform="Linux",version="3.13.8"} 1
@@ -41,6 +44,7 @@ func TestSingleOnlineServer(t *testing.T) {
 	`
 
 	err := testutil.CollectAndCompare(collector, strings.NewReader(expectedOutput),
+		"teamspeak_up",
 		"teamspeak_version_info",
 		"teamspeak_virtualserver_status",
 		"teamspeak_virtualserver_up",
@@ -67,6 +71,9 @@ func TestMultiOnlineOfflineServers(t *testing.T) {
 	collector := NewCollector(client)
 
 	expectedOutput := `
+		# HELP teamspeak_up Was the last scrape of the TeamSpeak ServerQuery API successful (1 = yes, 0 = no)
+        # TYPE teamspeak_up gauge
+        teamspeak_up 1
 		# HELP teamspeak_virtualserver_channels_online Number of channels created on the virtual server
 		# TYPE teamspeak_virtualserver_channels_online gauge
 		teamspeak_virtualserver_channels_online{id="1",virtualserver="First server"} 53
@@ -88,6 +95,7 @@ func TestMultiOnlineOfflineServers(t *testing.T) {
 	`
 
 	err := testutil.CollectAndCompare(collector, strings.NewReader(expectedOutput),
+		"teamspeak_up",
 		"teamspeak_virtualserver_status",
 		"teamspeak_virtualserver_up",
 		"teamspeak_virtualserver_channels_online",
@@ -109,6 +117,9 @@ func TestBadJSONOnServerList(t *testing.T) {
 	collector := NewCollector(client)
 
 	expectedOutput := `
+		# HELP teamspeak_up Was the last scrape of the TeamSpeak ServerQuery API successful (1 = yes, 0 = no)
+        # TYPE teamspeak_up gauge
+        teamspeak_up 0
         # HELP teamspeak_version_info Servers version information including platform and build number
         # TYPE teamspeak_version_info gauge
         teamspeak_version_info{build="1779874471",platform="Linux",version="3.13.8"} 1
@@ -161,7 +172,11 @@ func TestAPIErrorResponse(t *testing.T) {
 	client := NewClient(ts.URL, "test-api-key")
 	collector := NewCollector(client)
 
-	expectedOutput := ``
+	expectedOutput := `
+	# HELP teamspeak_up Was the last scrape of the TeamSpeak ServerQuery API successful (1 = yes, 0 = no)
+    # TYPE teamspeak_up gauge
+    teamspeak_up 0
+	`
 
 	err := testutil.CollectAndCompare(collector, strings.NewReader(expectedOutput))
 	if err != nil {
@@ -173,7 +188,11 @@ func TestUnreachableServer(t *testing.T) {
 	client := NewClient("http://127.0.0.1:0", "test-api-key")
 	collector := NewCollector(client)
 
-	expectedOutput := ``
+	expectedOutput := `
+	# HELP teamspeak_up Was the last scrape of the TeamSpeak ServerQuery API successful (1 = yes, 0 = no)
+    # TYPE teamspeak_up gauge
+    teamspeak_up 0
+	`
 
 	err := testutil.CollectAndCompare(collector, strings.NewReader(expectedOutput))
 	if err != nil {

@@ -29,9 +29,10 @@ type collector struct {
 	client *Client
 
 	// Available for all virtual servers regardless of their status
+	apiUp       *prometheus.Desc
 	versionInfo *prometheus.Desc
 	status      *prometheus.Desc
-	up          *prometheus.Desc
+	serverUp    *prometheus.Desc
 
 	// Only available if the virtual server has status "online"
 	maxClients                     *prometheus.Desc
@@ -72,6 +73,11 @@ func NewCollector(client *Client) *collector {
 	return &collector{
 		client: client,
 
+		apiUp: prometheus.NewDesc(
+			"teamspeak_up",
+			"Was the last scrape of the TeamSpeak ServerQuery API successful (1 = yes, 0 = no)",
+			nil, nil,
+		),
 		versionInfo: prometheus.NewDesc(
 			"teamspeak_version_info",
 			"Servers version information including platform and build number",
@@ -82,7 +88,7 @@ func NewCollector(client *Client) *collector {
 			"Status of the virtual server (0 = offline, 1 = online, 2 = virtual online, 3 = booting up, 4 = shutting down)",
 			serverLabels, nil,
 		),
-		up: prometheus.NewDesc(
+		serverUp: prometheus.NewDesc(
 			"teamspeak_virtualserver_up",
 			"Virtual server online status (1 = online, 0 = not online)",
 			serverLabels, nil,
@@ -246,6 +252,13 @@ func (c *collector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (c *collector) Collect(ch chan<- prometheus.Metric) {
+	apiUp := 0.0
+
+	// Always show 'teamspeak_up' metric, even on error.
+	defer func() {
+		ch <- prometheus.MustNewConstMetric(c.apiUp, prometheus.GaugeValue, apiUp)
+	}()
+
 	versionInfo, err := c.client.Version()
 	if err != nil {
 		log.Printf("failed to get version info: %v", err)
@@ -269,7 +282,7 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 		}
 
 		ch <- prometheus.MustNewConstMetric(c.status, prometheus.GaugeValue, parseServerStatus(server.Status), idString, server.Name)
-		ch <- prometheus.MustNewConstMetric(c.up, prometheus.GaugeValue, isOnline, idString, server.Name)
+		ch <- prometheus.MustNewConstMetric(c.serverUp, prometheus.GaugeValue, isOnline, idString, server.Name)
 
 		// If a virtual server is offline, sending a HTTP request to its endpoint (/<id>/serverinfo) will start up the server in some kind of virtual online mode.
 		// To prevent this and get the same behavior as using the raw ServerQuery (where serverinfo is not available), skip more detailed stats.
@@ -283,6 +296,9 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 			log.Printf("failed to get info for virtual server %d: %v", server.ID, err)
 			continue
 		}
+
+		// All HTTP requests have been successful so mark the scrape status as up
+		apiUp = 1.0
 
 		ch <- prometheus.MustNewConstMetric(c.maxClients, prometheus.GaugeValue, float64(info.MaxClients), idString, server.Name)
 		ch <- prometheus.MustNewConstMetric(c.clientsOnline, prometheus.GaugeValue, float64(info.ClientsOnline), idString, server.Name)
