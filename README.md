@@ -39,13 +39,15 @@ Make sure to enable `http` as query protocol when you start the TeamSpeak server
 curl -X GET "http://192.168.0.164:10080/serverlist?api-key=BADy2WBwAHAeFyRqTXOoT5kKgIR1889C1WDxlhm"
 ```
 
+TeamSpeak's documentation recommends placing the WebQuery port (10080) behind a reverse proxy with HTTPS enabled. Especially if you need the WebQuery exposed to the internet.
+
 ### Usage
 
 | Flag      | Environment Variable | Default                | Description                                           |
 | --------- | -------------------- | ---------------------- | ----------------------------------------------------- |
 | --listen  | TS_EXPORTER_LISTEN   | :9800                  | Address on which to expose metrics and web interface. |
-| --api-key | TS_EXPORTER_API_KEY  | _(Required)_           | API key for WebQuery authentication.                  |
-| --url     | TS_EXPORTER_URL      | http://127.0.0.1:10080 | URL for WebQuery endpoint.                            |
+| --api-key | TS_EXPORTER_API_KEY  | _(Required)_           | API key for TeamSpeak WebQuery authentication.        |
+| --url     | TS_EXPORTER_URL      | http://127.0.0.1:10080 | URL for TeamSpeak WebQuery endpoint.                  |
 
 ```bash
 # Using command-line flags
@@ -67,10 +69,10 @@ go test ./...
 
 ### TeamSpeak version support
 
-It has been tested against **TeamSpeak 3** and **TeamSpeak 6 beta**. I don't have a license for TS6 so I'm unable to verify with multiple virtual servers but the structure seems to be almost the same. Note that TeamSpeak 6 is still under active development so things can change quickly.
+It has been tested and working against **TeamSpeak 3** and **TeamSpeak 6 beta**. I haven't been able to to verify with multiple virtual servers for TeamSpeak 6 but the WebQuery responses seems to be almost the same. Note that TeamSpeak 6 is still under active development so things can change quickly.
 
 ### About
 
 This project is mainly for learning purposes and to build something that I use. There are other TeamSpeak exporters out there that do a better job.
 
-I would lie if I said that I didn't get a lot of help from Google Gemini, especially when it comes to split things up and where they should be (which I now realize is a big part of programming). I can usually figure out how to do the things I want with some old StackOverflow and blog posts, but it ends up in the same function and without any structure.
+I would lie if I said that I didn't get a lot of help from Google Gemini, especially when it comes to split things up and where they should be (which I now realize is a big part of programming). I can usually figure out how to do the things I want with some old StackOverflow and blog posts, but it ends up in the same function and without any structure. If something looks clever, it's not me.

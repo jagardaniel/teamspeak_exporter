@@ -101,7 +101,7 @@ func NewCollector(client *Client) *collector {
 		),
 		clientsOnline: prometheus.NewDesc(
 			"teamspeak_virtualserver_clients_online",
-			"Number of clients connected to the virtual server",
+			"Number of clients connected to the virtual server (including query clients)",
 			serverLabels, nil,
 		),
 		channelsOnline: prometheus.NewDesc(
