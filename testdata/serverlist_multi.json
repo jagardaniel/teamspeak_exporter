@@ -1,0 +1,40 @@
+{
+  "body": [
+    {
+      "virtualserver_autostart": "1",
+      "virtualserver_clientsonline": "1",
+      "virtualserver_id": "1",
+      "virtualserver_machine_id": "",
+      "virtualserver_maxclients": "100",
+      "virtualserver_name": "First server",
+      "virtualserver_port": "9987",
+      "virtualserver_queryclientsonline": "0",
+      "virtualserver_status": "online",
+      "virtualserver_uptime": "688078"
+    },
+    {
+      "virtualserver_autostart": "1",
+      "virtualserver_clientsonline": "0",
+      "virtualserver_id": "2",
+      "virtualserver_machine_id": "",
+      "virtualserver_maxclients": "15",
+      "virtualserver_name": "Second server",
+      "virtualserver_port": "9988",
+      "virtualserver_queryclientsonline": "0",
+      "virtualserver_status": "online",
+      "virtualserver_uptime": "120921"
+    },
+    {
+      "virtualserver_autostart": "1",
+      "virtualserver_id": "6",
+      "virtualserver_machine_id": "",
+      "virtualserver_name": "Third server",
+      "virtualserver_port": "9989",
+      "virtualserver_status": "offline"
+    }
+  ],
+  "status": {
+    "code": 0,
+    "message": "ok"
+  }
+}

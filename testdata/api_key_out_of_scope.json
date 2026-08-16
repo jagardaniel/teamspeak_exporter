@@ -1,0 +1,7 @@
+{
+  "status": {
+    "code": 5120,
+    "extra_message": "command not in api key scope",
+    "message": "out of scope"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "body": [
+    {
+      "virtualserver_autostart": "1",
+      "virtualserver_clientsonline": "1",
+      "virtualserver_id": "1",
+      "virtualserver_machine_id": "",
+      "virtualserver_maxclients": "100",
+      "virtualserver_name": "First server",
+      "virtualserver_port": "9987",
+      "virtualserver_queryclientsonline": "0",
+      "virtualserver_status": "online",
+      "virtualserver_uptime": "688078"
+    }
+  ],
+  "status": {
+    "code": 0,
+    "message": "ok"
+  }
+}
