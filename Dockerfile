@@ -2,8 +2,6 @@
 
 FROM golang:1.26-alpine AS build
 
-ARG VERSION=dev
-
 WORKDIR /app
 
 COPY go.mod go.sum ./
@@ -11,7 +9,7 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w -X main.version=${VERSION}" -o /teamspeak_exporter
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s" -o /teamspeak_exporter
 
 FROM gcr.io/distroless/static-debian13:nonroot AS release
 

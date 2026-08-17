@@ -67,6 +67,20 @@ go build -o teamspeak_exporter .
 go test ./...
 ```
 
+### Docker / Podman
+
+A container image is also available on Docker Hub. Example using the latest tag:
+
+```bash
+podman run --rm -p 9800:9800 -e TS_EXPORTER_URL="http://192.168.0.100:10080" -e TS_EXPORTER_API_KEY="BADy2WBwAHAeFyRqTXOoT5kKgIR1889C1WDxlhm" docker.io/jagardaniel/teamspeak_exporter:latest
+```
+
+Build a local container:
+
+```bash
+podman build -t teamspeak_exporter:local .
+```
+
 ### TeamSpeak version support
 
 It has been tested and working against **TeamSpeak 3** and **TeamSpeak 6 beta**. I haven't been able to to verify with multiple virtual servers for TeamSpeak 6 but the WebQuery responses seems to be almost the same. Note that TeamSpeak 6 is still under active development so things can change quickly.

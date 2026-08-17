@@ -10,13 +10,10 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-var version = "dev"
-
 type Config struct {
-	Listen  string           `env:"TS_EXPORTER_LISTEN" help:"Address on which to expose metrics and web interface." default:":9800"`
-	APIKey  string           `env:"TS_EXPORTER_API_KEY" help:"API key for TeamSpeak WebQuery authentication." required:""`
-	URL     string           `env:"TS_EXPORTER_URL" help:"URL for TeamSpeak WebQuery endpoint." default:"http://127.0.0.1:10080"`
-	Version kong.VersionFlag `help:"Show version and exit."`
+	Listen string `env:"TS_EXPORTER_LISTEN" help:"Address on which to expose metrics and web interface." default:":9800"`
+	APIKey string `env:"TS_EXPORTER_API_KEY" help:"API key for TeamSpeak WebQuery authentication." required:""`
+	URL    string `env:"TS_EXPORTER_URL" help:"URL for TeamSpeak WebQuery endpoint." default:"http://127.0.0.1:10080"`
 }
 
 func main() {
@@ -24,14 +21,6 @@ func main() {
 	kong.Parse(config,
 		kong.Name("teamspeak_exporter"),
 		kong.Description("Prometheus exporter for TeamSpeak servers."),
-		kong.Vars{
-			"version": version,
-		},
-	)
-
-	slog.Info("Starting teamspeak_exporter",
-		"version", version,
-		"listen", config.Listen,
 	)
 
 	client := NewClient(config.URL, config.APIKey)
@@ -57,7 +46,7 @@ func main() {
              </html>`))
 	})
 
-	slog.Info("Listening for metrics requests", "address", config.Listen)
+	slog.Info("Starting teamspeak_exporter", "address", config.Listen)
 
 	if err := http.ListenAndServe(config.Listen, nil); err != nil {
 		slog.Error("HTTP server error", "error", err)
