@@ -1,29 +1,45 @@
 package main
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
+	"os"
 
 	"github.com/alecthomas/kong"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+var version = "dev"
+
 type Config struct {
-	Listen string `env:"TS_EXPORTER_LISTEN" help:"Address on which to expose metrics and web interface." default:":9800"`
-	APIKey string `env:"TS_EXPORTER_API_KEY" help:"API key for TeamSpeak WebQuery authentication." required:""`
-	URL    string `env:"TS_EXPORTER_URL" help:"URL for TeamSpeak WebQuery endpoint." default:"http://127.0.0.1:10080"`
+	Listen  string           `env:"TS_EXPORTER_LISTEN" help:"Address on which to expose metrics and web interface." default:":9800"`
+	APIKey  string           `env:"TS_EXPORTER_API_KEY" help:"API key for TeamSpeak WebQuery authentication." required:""`
+	URL     string           `env:"TS_EXPORTER_URL" help:"URL for TeamSpeak WebQuery endpoint." default:"http://127.0.0.1:10080"`
+	Version kong.VersionFlag `help:"Show version and exit."`
 }
 
 func main() {
 	config := &Config{}
-	kong.Parse(config)
+	kong.Parse(config,
+		kong.Name("teamspeak_exporter"),
+		kong.Description("Prometheus exporter for TeamSpeak servers."),
+		kong.Vars{
+			"version": version,
+		},
+	)
+
+	slog.Info("Starting teamspeak_exporter",
+		"version", version,
+		"listen", config.Listen,
+	)
 
 	client := NewClient(config.URL, config.APIKey)
 
 	// Verify that we can reach the WebQuery API and that the api-key is valid and has the correct scope
 	if err := client.Ping(); err != nil {
-		log.Fatalf("failed to start: %v", err)
+		slog.Error("Failed to verify WebQuery connection", "error", err)
+		os.Exit(1)
 	}
 
 	reg := prometheus.NewRegistry()
@@ -41,9 +57,10 @@ func main() {
              </html>`))
 	})
 
-	log.Printf("listening on %s", config.Listen)
+	slog.Info("Listening for metrics requests", "address", config.Listen)
 
 	if err := http.ListenAndServe(config.Listen, nil); err != nil {
-		log.Fatalf("HTTP server error: %v", err)
+		slog.Error("HTTP server error", "error", err)
+		os.Exit(1)
 	}
 }

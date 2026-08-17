@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"log/slog"
 	"strconv"
 	"strings"
 
@@ -261,7 +261,7 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 
 	versionInfo, err := c.client.Version()
 	if err != nil {
-		log.Printf("failed to get version info: %v", err)
+		slog.Error("Failed to get version info", "error", err)
 		return
 	}
 
@@ -269,7 +269,7 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 
 	servers, err := c.client.VirtualServerList()
 	if err != nil {
-		log.Printf("failed to list virtual servers: %v", err)
+		slog.Error("Failed to list virtual servers", "error", err)
 		return
 	}
 
@@ -293,7 +293,10 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 		// This could be run concurrently. I don't understand how yet, so something for the future. Could be an issue if you have many virtual servers.
 		info, err := c.client.VirtualServerInfo(server.ID)
 		if err != nil {
-			log.Printf("failed to get info for virtual server %d: %v", server.ID, err)
+			slog.Error("Failed to get info for virtual server",
+				"server_id", server.ID,
+				"error", err,
+			)
 			continue
 		}
 
