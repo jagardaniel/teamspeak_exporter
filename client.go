@@ -71,10 +71,11 @@ type VirtualServerInfoResponse struct {
 
 func NewClient(baseURL, apiKey string) *Client {
 	cleanedURL := strings.TrimRight(baseURL, "/")
+	cleanedApiKey := strings.TrimSpace(apiKey)
 
 	return &Client{
 		baseURL: cleanedURL,
-		apiKey:  apiKey,
+		apiKey:  cleanedApiKey,
 		httpClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},

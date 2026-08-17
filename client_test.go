@@ -151,11 +151,19 @@ func TestVirtualServerInfoBadID(t *testing.T) {
 	}
 }
 
-func TestTrimTrailingSlash(t *testing.T) {
+func TestTrimURLTrailingSlash(t *testing.T) {
 	client := NewClient("http://127.0.0.1:10080/", "test-api-key")
 
 	if client.baseURL != "http://127.0.0.1:10080" {
 		t.Errorf("expected baseURL to be 'http://127.0.0.1:10080', got %q", client.baseURL)
+	}
+}
+
+func TestTrimApiKeyWhitespace(t *testing.T) {
+	client := NewClient("http://127.0.0.1:10080", " test-api-key\n\r")
+
+	if client.apiKey != "test-api-key" {
+		t.Errorf("expected apiKey to be 'test-api-key', got %q", client.apiKey)
 	}
 }
 
