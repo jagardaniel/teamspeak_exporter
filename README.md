@@ -45,7 +45,7 @@ TeamSpeak's documentation recommends placing the WebQuery port (10080) behind a 
 
 | Flag      | Environment Variable | Default                | Description                                           |
 | --------- | -------------------- | ---------------------- | ----------------------------------------------------- |
-| --listen  | TS_EXPORTER_LISTEN   | :9800                  | Address on which to expose metrics and web interface. |
+| --listen  | TS_EXPORTER_LISTEN   | :9289                  | Address on which to expose metrics and web interface. |
 | --api-key | TS_EXPORTER_API_KEY  | _(Required)_           | API key for TeamSpeak WebQuery authentication.        |
 | --url     | TS_EXPORTER_URL      | http://127.0.0.1:10080 | URL for TeamSpeak WebQuery endpoint.                  |
 
@@ -72,7 +72,7 @@ go test ./...
 A container image is also available on Docker Hub. Example using the latest tag:
 
 ```bash
-podman run --rm -p 9800:9800 -e TS_EXPORTER_URL="http://192.168.0.100:10080" -e TS_EXPORTER_API_KEY="BADy2WBwAHAeFyRqTXOoT5kKgIR1889C1WDxlhm" docker.io/jagardaniel/teamspeak_exporter:latest
+podman run --rm -p 9289:9289 -e TS_EXPORTER_URL="http://192.168.0.100:10080" -e TS_EXPORTER_API_KEY="BADy2WBwAHAeFyRqTXOoT5kKgIR1889C1WDxlhm" docker.io/jagardaniel/teamspeak_exporter:latest
 ```
 
 Build a local container:

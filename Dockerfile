@@ -17,6 +17,6 @@ WORKDIR /app
 
 COPY --from=build /teamspeak_exporter /app/teamspeak_exporter
 
-EXPOSE 9800
+EXPOSE 9289
 
 ENTRYPOINT ["/app/teamspeak_exporter"]

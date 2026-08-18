@@ -28,8 +28,8 @@ func TestDefaults(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if cfg.Listen != ":9800" {
-		t.Errorf("expected ':9800', got %q", cfg.Listen)
+	if cfg.Listen != ":9289" {
+		t.Errorf("expected ':9289', got %q", cfg.Listen)
 	}
 
 	if cfg.URL != "http://127.0.0.1:10080" {
