@@ -6,10 +6,15 @@ Prometheus exporter for TeamSpeak servers. It uses the TeamSpeak WebQuery API to
 
 The exporter collects some overall status and more detailed statistics for each virtual server that is online.
 
-Some examples:
+Example metrics:
 
 - **Overall**: `teamspeak_up`, `teamspeak_version_info`
 - **Per virtual server**: `teamspeak_virtualserver_up`, `teamspeak_virtualserver_clients_online`, `teamspeak_virtualserver_uptime`, `teamspeak_virtualserver_packetloss_control_percent`, `teamspeak_virtualserver_sent_bytes_total`
+
+Some notes:
+
+- `...clients_online` also includes query clients. You can subtract `...query_clients_online` to get the count of regular voice clients.
+- `...received_bytes_total`, `...sent_bytes_total`, and their packet counterparts (`...packets_total`) do not include file transfer data. File transfers have their own dedicated bytes metrics (`...*_file_transfer_bytes_total`).
 
 ### Prerequisites
 

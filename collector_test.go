@@ -26,7 +26,7 @@ func TestSingleOnlineServer(t *testing.T) {
 		# HELP teamspeak_version_info Servers version information including platform and build number
 		# TYPE teamspeak_version_info gauge
 		teamspeak_version_info{build="1779874471",platform="Linux",version="3.13.8"} 1
-		# HELP teamspeak_virtualserver_clients_online Number of clients connected to the virtual server (including query clients)
+		# HELP teamspeak_virtualserver_clients_online Number of clients connected to the virtual server
 		# TYPE teamspeak_virtualserver_clients_online gauge
         teamspeak_virtualserver_clients_online{id="1",virtualserver="First server"} 2
 		# HELP teamspeak_virtualserver_ping_seconds The average ping of all clients connected to the virtual server

@@ -101,7 +101,7 @@ func NewCollector(client *Client) *collector {
 		),
 		clientsOnline: prometheus.NewDesc(
 			"teamspeak_virtualserver_clients_online",
-			"Number of clients connected to the virtual server (including query clients)",
+			"Number of clients connected to the virtual server",
 			serverLabels, nil,
 		),
 		channelsOnline: prometheus.NewDesc(
@@ -195,12 +195,12 @@ func NewCollector(client *Client) *collector {
 			serverLabels, nil,
 		),
 		fileTransferBytesSentTotal: prometheus.NewDesc(
-			"teamspeak_virtualserver_file_transfer_sent_bytes_total",
+			"teamspeak_virtualserver_sent_file_transfer_bytes_total",
 			"Total amount of filetransfer data bytes sent",
 			serverLabels, nil,
 		),
 		fileTransferBytesReceivedTotal: prometheus.NewDesc(
-			"teamspeak_virtualserver_file_transfer_received_bytes_total",
+			"teamspeak_virtualserver_received_file_transfer_bytes_total",
 			"Total amount of filetransfer data bytes received",
 			serverLabels, nil,
 		),
