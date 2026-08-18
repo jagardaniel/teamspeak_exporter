@@ -26,13 +26,13 @@ func TestSingleOnlineServer(t *testing.T) {
 		# HELP teamspeak_version_info Servers version information including platform and build number
 		# TYPE teamspeak_version_info gauge
 		teamspeak_version_info{build="1779874471",platform="Linux",version="3.13.8"} 1
-		# HELP teamspeak_virtualserver_clients_online Number of clients connected to the virtual server
+		# HELP teamspeak_virtualserver_clients_online Number of clients connected to the virtual server (includes query clients)
 		# TYPE teamspeak_virtualserver_clients_online gauge
         teamspeak_virtualserver_clients_online{id="1",virtualserver="First server"} 2
 		# HELP teamspeak_virtualserver_ping_seconds The average ping of all clients connected to the virtual server
         # TYPE teamspeak_virtualserver_ping_seconds gauge
         teamspeak_virtualserver_ping_seconds{id="1",virtualserver="First server"} 0
-		# HELP teamspeak_virtualserver_sent_packets_total Total amount of packets sent
+		# HELP teamspeak_virtualserver_sent_packets_total Total amount of packets sent (excludes file transfers)
         # TYPE teamspeak_virtualserver_sent_packets_total counter
         teamspeak_virtualserver_sent_packets_total{id="1",virtualserver="First server"} 1.8339208e+07
 		# HELP teamspeak_virtualserver_status Status of the virtual server (0 = offline, 1 = online, 2 = virtual online, 3 = booting up, 4 = shutting down)
@@ -78,7 +78,7 @@ func TestMultiOnlineOfflineServers(t *testing.T) {
 		# TYPE teamspeak_virtualserver_channels_online gauge
 		teamspeak_virtualserver_channels_online{id="1",virtualserver="First server"} 53
 		teamspeak_virtualserver_channels_online{id="2",virtualserver="Second server"} 1
-		# HELP teamspeak_virtualserver_sent_bytes_total Total amount of bytes sent
+		# HELP teamspeak_virtualserver_sent_bytes_total Total amount of bytes sent (excludes file transfers)
 		# TYPE teamspeak_virtualserver_sent_bytes_total counter
 		teamspeak_virtualserver_sent_bytes_total{id="1",virtualserver="First server"} 2.187625219e+09
 		teamspeak_virtualserver_sent_bytes_total{id="2",virtualserver="Second server"} 0
